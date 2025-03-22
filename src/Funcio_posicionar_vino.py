@@ -36,18 +36,8 @@ def conversor_precio(precio):
 def conversor_sabor(sabor):
     return sabor/8.5
 
+# Función principal
 def valora_tu_vino(delantera,trasera,precio):
-    
-    #Funciones para convertir variables proporcianadas por LLM a formato numérico usado por nuestro modelo
-    def dic_pais(nombre_pais):
-        dic = dict(zip(X_train_dict_pais["País"], X_train_dict_pais["País_encoded"]))
-        return dic[nombre_pais]
-    
-    def conversor_precio(precio):
-        return precio/df["Precio"].max()
-
-    def conversor_sabor(sabor):
-        return sabor/8.5
 
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
@@ -103,7 +93,8 @@ def valora_tu_vino(delantera,trasera,precio):
         "{texto_combinado}"
 
         Devuelve solo un lista con los 13 valores separados por comas, sin encabezados. Si no puedes rellenar algún elemento, complétalo con "no encontrado". Quiero que lo devuelvas como una lista de Python.
-        intenta completar con tu criterio estimado el valor de seco/dulce y ligero/poderoso del 0 al 10. que la salida sea una lista con 12 campos únicamente y nada más, tal como esta [1,	Italia,	0,	1,	0,	6.2,	2.0,	0,	0,	0,	1,	0] no como esta ["['España'", '1', '1', '0', '0', '7', '0.5', '0', '0', '0', '0', '0', '0]']. Quiero que los números de la lista tengan formato numerico.
+        intenta completar con tu criterio estimado el valor de seco/dulce y ligero/poderoso del 0 al 10. que la salida sea una lista con 12 campos únicamente y nada más, tal como esta
+        [1,	Italia,	0,	1,	0,	6.2,	2.0,	0,	0,	0,	1,	0] no como esta ["['España'", '1', '1', '0', '0', '7', '0.5', '0', '0', '0', '0', '0', '0]']. Quiero que los números de la lista tengan formato numerico.
         """
 
     # Llamar a la API de Gemini
