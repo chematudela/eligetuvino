@@ -11,10 +11,10 @@ import ast
 import joblib
 
 # Importación y cepillado de set de datos
-X_train_dict_pais = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/X_train_dict_pais.csv")
-df_selected = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/X_train_selected.csv")
-df_train = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/df_merged.csv")
-df = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
+X_train_dict_pais = pd.read_csv("data/datasets/processed/X_train_dict_pais.csv")
+df_selected = pd.read_csv("data/datasets/processed/X_train_selected.csv")
+df_train = pd.read_csv("data/datasets/processed/df_merged.csv")
+df = pd.read_csv("data/datasets/raw/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
 df_selected = df_selected.rename(columns={'País_encoded': 'País'})
 
 
@@ -47,10 +47,10 @@ def valora_tu_vino(delantera,trasera,precio):
 
 
     # Importación y cepillado de set de datos
-    X_train_dict_pais = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/X_train_dict_pais.csv")
-    df_selected = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/X_train_selected.csv")
-    df_train = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/df_merged.csv")
-    df = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/Archivos/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
+    X_train_dict_pais = pd.read_csv("data/datasets/processed/X_train_dict_pais.csv")
+    df_selected = pd.read_csv("data/datasets/processed/X_train_selected.csv")
+    df_train = pd.read_csv("data/datasets/processed/df_merged.csv")
+    df = pd.read_csv("data/datasets/raw/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
     df_selected = df_selected.rename(columns={'País_encoded': 'País'})
     
     

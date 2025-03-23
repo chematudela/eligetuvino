@@ -5,12 +5,12 @@ from sklearn.preprocessing import MinMaxScaler
 
 # Carga de datos
 
-X_train = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/data/datasets/processed/X_train_imputed.csv")
-y_train = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/data/datasets/processed/y_train.csv")
-X_test = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/data/datasets/processed/X_test_imputed.csv")
-y_test = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/data/datasets/processed/y_test.csv")
+X_train = pd.read_csv("data/datasets/processed/X_train_imputed.csv")
+y_train = pd.read_csv("data/datasets/processed/y_train.csv")
+X_test = pd.read_csv("data/datasets/processed/X_test_imputed.csv")
+y_test = pd.read_csv("data/datasets/processed/y_test.csv")
 
-df_final_tintos_corregido = pd.read_csv("/Users/josetudela/Projects/EligeTuVino/eligetuvino/data/datasets/raw/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
+df_final_tintos_corregido = pd.read_csv("data/datasets/raw/FINAL_DF_TINTOS_PRECIO_CORREGIDO.csv")
 
 # Cepillado de datos 
 
