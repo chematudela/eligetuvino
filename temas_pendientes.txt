@@ -16,9 +16,9 @@ URLs de CSV para cada funcion.
 
 José María: 
 Para hacer: 
-Referenciar llamadas a repositorio
+Referenciar llamadas a repositorio ✅ (faltan los archivos que aún no están subidos al repo)
 Organizar archivos en MAIN (Necesito una estructura logica para poder hacer el speech del backend)
-Dar formato al MAIN sacando las DEF y aligerandolo.
+Dar formato al MAIN sacando las DEF y aligerandolo.✅
 
 Soluciones: 
 
