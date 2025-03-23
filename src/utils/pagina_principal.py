@@ -103,7 +103,9 @@ def pagina_principal():
         "BytesIO", 
         "Plotly Colors", 
         "Matplotlib", 
-        "Seaborn"
+        "Seaborn",
+        "Sklearn",
+        "google.generativeai"
     ],
     "Descripción": [
         "Framework para crear aplicaciones web interactivas.",
@@ -116,7 +118,10 @@ def pagina_principal():
         "Módulo para trabajar con flujos de datos binarios (como imágenes).",
         "Proporciona una paleta de colores para visualizaciones en Plotly.",
         "Librería para la creación de gráficos estáticos.",
-        "Librería para visualización de datos estadísticos y gráficos atractivos."
+        "Librería para visualización de datos estadísticos y gráficos atractivos.",
+        "Librería con funciones, modelos de ML y mértricas.",
+        "Librería para uso de la api de Gemini (LLM)"
+
     ]})
     st.markdown("### Librerías utilizadas")
     st.table(librerias.set_index("Librería")) 

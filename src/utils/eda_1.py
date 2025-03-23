@@ -2,9 +2,11 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import json
+import plotly.express as px
+import plotly.colors as pc
 
-with open('data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
-    country_mapping = json.load(f)
+#with open('data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
+    #country_mapping = json.load(f)
 
 def eda_1():
     st.title("📊 Primera parte del EDA")
