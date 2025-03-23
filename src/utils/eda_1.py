@@ -4,6 +4,7 @@ import altair as alt
 import json
 import plotly.express as px
 import plotly.colors as pc
+from utils.country_mapping import country_mapping
 #with open('data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
     #country_mapping = json.load(f)
 
@@ -19,14 +20,13 @@ def eda_1():
 # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     if vino_tipo == "Vino Tinto":
-        archivo_csv = r'../datasets/processed/df_merged.csv'  
+        archivo_csv = '../data/datasets/processed/df_merged.csv'
     elif vino_tipo == "Vino Blanco":
         archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\blancos.csv"  
     else:
         archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\espumosos.csv"  
 # Cargar el CSV seleccionado en el DataFrame df
     df = pd.read_csv(archivo_csv)    
-    
     df["País"] = df["País"].replace(country_mapping)
 
     # Grouping data by number of wines
