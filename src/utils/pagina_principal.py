@@ -5,7 +5,6 @@ import requests
 from PIL import Image
 from io import BytesIO
 import pandas as pd
-from country_mapping import country_mapping
 
 def pagina_principal():
     def cargar_frases():
