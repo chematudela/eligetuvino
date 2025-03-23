@@ -63,6 +63,7 @@ def eda_1():
         st.table(df_top_10.set_index("País"))
         pass
 
+    st.divider()
 
     # Agrupar los datos por país y bodega, contando el número de vinos por combinación
     df_grouped_1 = df.groupby(["País", "Bodega"])["ID"].nunique().reset_index(name="num_vinos")
@@ -105,7 +106,9 @@ def eda_1():
         df_top_10 = df_grouped_1.sort_values(by="num_vinos", ascending=False).head(10)
         st.table(df_top_10.set_index(["País", "Bodega"]))
 
+    st.divider()
     
+
     # Primero, agrupar los datos y calcular el número de bodegas por país
     df_grouped_1 = df.groupby("País")["Bodega"].nunique().reset_index(name="num_bodegas")
 
@@ -130,8 +133,11 @@ def eda_1():
 
     # Mostrar la tabla con los 10 países con más bodegas
     with col2: 
-        st.subheader("🏢 Top 10 países con más bodegas registradas")
+        st.write("🏢 Top 10 países con más bodegas registradas")
         st.table(df_top_10.set_index("País"))
+    
+    
+    st.divider()
 
 
     # Average wine rating per country
@@ -139,25 +145,42 @@ def eda_1():
     df_grouped_2 = df.groupby("País").agg(
     num_bodegas=('Bodega', 'nunique'),  # Contamos el número único de bodegas
     avg_valoracion=('Valoración', 'mean')  # Calculamos la valoración promedio
-).reset_index()
+    ).reset_index()
 
+    col1, col2 = st.columns([2, 2])  # Controlamos el tamaño de las columnas
     with col1: 
-        fig4 = px.scatter(df_grouped_2, 
-                        x="num_bodegas",  # Número de bodegas
-                        y="avg_valoracion",  # Valoración promedio
-                        color="avg_valoracion",  # Colorear según la valoración
-                        hover_name="País",  # Muestra el país al pasar el ratón
-                        title=f"Relación entre el Número de Bodegas y la Valoración Promedio de {vino_tipo}",
-                        labels={'avg_valoracion': 'Valoración Promedio', 'num_bodegas': 'Número de Bodegas'},
-                        color_continuous_scale="RdYlGn")  # Color según la valoración
+        # Crear el gráfico de dispersión
+        fig4 = px.scatter(
+            df_grouped_2, 
+            x="num_bodegas",  # Número de bodegas
+            y="avg_valoracion",  # Valoración promedio
+            color="avg_valoracion",  # Colorear según la valoración
+            hover_name="País",  # Muestra el país al pasar el ratón
+            labels={'avg_valoracion': 'Valoración Promedio', 'num_bodegas': 'Número de Bodegas'},
+            color_continuous_scale="RdYlGn"  # Color según la valoración
+            )
 
+            # Actualizar el diseño del gráfico
+        fig4.update_layout(
+            title=dict(
+                text=f"Número de Bodegas <br> y la Valoración Promedio de {vino_tipo}",
+                font=dict(size=16),  # Ajusta el tamaño de la fuente
+                x=0.5,  # Centra el título
+                xanchor='center'
+            )
+        )
+
+    # Mostrar el gráfico en Streamlit
         st.plotly_chart(fig4, use_container_width=True)
 
     # Top 10 países con mejor valoración promedio
     with col2:
         df_top_10_valoracion = df_grouped_2.sort_values(by="avg_valoracion", ascending=False).head(10)
-        st.subheader("⭐ Top 10 países con la mejor valoración promedio de vinos")
+        st.write("⭐ Top 10 países con la mejor valoración promedio de vinos")
         st.table(df_top_10_valoracion.set_index("País"))
+    
+    st.divider()
+
 
     # Wine price by country
     df['Precio'] = pd.to_numeric(df['Precio'], errors='coerce')
