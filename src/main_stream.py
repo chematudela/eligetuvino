@@ -11,6 +11,15 @@ import plotly.colors as pc
 from collections import Counter
 import matplotlib.pyplot as plt
 import seaborn as sns
+<<<<<<< Updated upstream
+=======
+import json
+from utils import pagina_principal,eda_1,bodega_perfecta,vino_perfecto,recomendador_vinos,estimacion_valoracion
+from country_mapping import country_mapping
+
+#with open('../data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
+    #country_mapping = json.load(f)
+>>>>>>> Stashed changes
 
 country_mapping = {
         "Italia": "Italy",
