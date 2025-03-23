@@ -8,3 +8,5 @@ seaborn
 xgboost
 statsmodels
 seaborn
+streamlit
+altair
