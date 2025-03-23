@@ -29,7 +29,7 @@ alt.themes.enable("dark")
 
 st.sidebar.title("Navegación")
 
-pagina= st.sidebar.selectbox("Selecciona una página", ["Página principal", "EDA 1", "Bodega Perfecta","Vino perfecto","Procesado de imagen", "Recomendador de vinos"])
+pagina= st.sidebar.selectbox("Selecciona una página", ["Página principal", "EDA 1", "Bodega Perfecta","Vino perfecto","Valoración de vino", "Recomendador de vinos"])
 
 if pagina == "Página principal":
     pagina_principal()
@@ -39,7 +39,7 @@ elif pagina == "Bodega Perfecta":
     bodega_perfecta()
 elif pagina == "Vino perfecto":
     vino_perfecto()
-elif pagina == "Procesado de imagen":
+elif pagina == "Valoración de vino":
     estimacion_valoracion()
 elif pagina == "Recomendador de vinos":
     recomendador_vinos()
