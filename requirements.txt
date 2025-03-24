@@ -10,3 +10,7 @@ statsmodels
 seaborn
 streamlit
 altair
+joblib
+google.generativeai
+pytesseract
+tesseract
