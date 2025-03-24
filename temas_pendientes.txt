@@ -5,7 +5,7 @@ Vino perfecto: Gráficos para blancos y espumosos
 Bodega Perfecta: Gráficos tintos.
 (Pendiente)Implementar reconocimiento imagen JM. (recomendacion vino)
 (Pendiente)Valorador vino implementar codigo. (Posicionar vino)
-Cargar frases. 
+Cargar frases. (Poner temporizador o buscar opciones)
 
 
 Soluciones: 
@@ -16,11 +16,13 @@ URLs de CSV para cada funcion.
 
 José María: 
 Para hacer: 
-Referenciar llamadas a repositorio
-Organizar archivos en MAIN (Necesito una estructura logica para poder hacer el speech del backend)
-Dar formato al MAIN sacando las DEF y aligerandolo.
+Referenciar llamadas a repositorio ✅ (faltan los archivos que aún no están subidos al repo)
+    - frases.txt que está en mi rama antigua ✅
+    - country_mapping.py en utils. Supuestamente invocando la libreria debería ser capaz de arrancarse. ✅
 
-Soluciones: 
+Organizar archivos en MAIN (Necesito una estructura logica para poder hacer el speech del backend)
+Vino perfecto: Gráficos para blancos y espumosos (a la espera de la conversión de columnas categóricas y subida a datasets/processed)
+Dar formato al MAIN sacando las DEF y aligerandolo.✅
 
 
 Pauline: 
