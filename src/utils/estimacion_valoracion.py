@@ -16,12 +16,13 @@ def estimacion_valoracion():
             try:
                 precio_float = float(precio)
 
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_delantera:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_delantera:
                     image_delantera = Image.open(uploaded_file_delantera)
                     image_delantera.save(temp_delantera.name)
                     ruta_delantera = temp_delantera.name
+                   
 
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_trasera:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_trasera:
                     image_trasera = Image.open(uploaded_file_trasera)
                     image_trasera.save(temp_trasera.name)
                     ruta_trasera = temp_trasera.name
