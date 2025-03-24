@@ -14,3 +14,4 @@ joblib
 google.generativeai
 pytesseract
 tesseract
+
