@@ -38,3 +38,36 @@ Grafico de araña.
 
 Soluciones: 
 (Vicente) Gráficos mas adecuados para mostrar ciertos resultados
+
+
+Preparación DF (One Hot encoder) Blancos y espumosos
+- Maridajes categóricas
+- Tipos de uva categóricas
+
+
+EDA 1
+Revisar consultas, mostrar resultados pertinentes. 
+Comprobar resultados y redireccionamiento tres DF
+Preparar argumentario para explicar (añadir preguntas y anecdotas) 
+
+Bodega perfecta: (Tintos/Blancos/Espumosos)
+Modelo adaptado para cada VINO
+Tipo de uva mas valorada (uva valor precio)
+Ubicación mas valorada (valor pais precio) 
+Ubicación mas valorada (valor region precio)
+Tipo de vino mas valorado (vino precio)
+Combinacion mas probable (pais+region+vino) + valoracion estimada. 
+
+El vino perfecto
+- Gráficos de dispersión sobre características de sabor
+- Valores promedio en los 50 vinos mejor valorados:
+- Correlación entre Tipos de Uva y Valoración
+-  gráfico de barras 
+- Adaptar consultas
+
+Valorador vino
+Mejorar y hacer mas bonito el Output. (Mostrar imagenes de etiqueta y valores recogidos)
+
+Recomendador 
+Valorador vino (alg RandomForest)
+Clusters

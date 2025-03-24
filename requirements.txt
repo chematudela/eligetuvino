@@ -14,4 +14,4 @@ joblib
 google.generativeai
 pytesseract
 tesseract
-
+tabulate

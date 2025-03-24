@@ -37,3 +37,5 @@ def estimacion_valoracion():
                 st.error("Por favor, ingresa un valor numérico válido para el precio.")
         else:
             st.warning("Por favor, sube ambas imágenes y proporciona el precio.")
+
+

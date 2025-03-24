@@ -20,7 +20,7 @@ def eda_1():
 # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     if vino_tipo == "Vino Tinto":
-        archivo_csv = '../data/datasets/processed/df_merged.csv'
+        archivo_csv = 'data/datasets/processed/df_merged.csv'
     elif vino_tipo == "Vino Blanco":
         archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\blancos.csv"  
     else:
