@@ -4,7 +4,7 @@ import altair as alt
 import json
 import plotly.express as px
 import plotly.colors as pc
-from utils.country_mapping import country_mapping
+from utils import country_mapping
 #with open('data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
     #country_mapping = json.load(f)
 

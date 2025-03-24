@@ -4,3 +4,4 @@ from .bodega_perfecta  import bodega_perfecta
 from .estimacion_valoracion import estimacion_valoracion
 from .vino_perfecto import vino_perfecto
 from .recomendador_vinos import recomendador_vinos
+from .country_mapping import country_mapping
