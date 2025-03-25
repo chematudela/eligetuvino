@@ -4,9 +4,7 @@ import altair as alt
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import LabelEncoder
+
 
 
 
@@ -215,5 +213,22 @@ def bodega_perfecta():
     st.divider()
    
     st.markdown("La Bodega perfecta: Mejores valores")
+
+    st.markdown(
+    f"""
+    <div style="
+        background-color:#4B0F24;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+        font-size: 24px;
+    ">
+        :copa_de_vino: <b>La valoración estimada para este vino es:</b> <br>
+        <span style="font-size: 32px;">:estrella: {prediccion_nota:.1f}/5 :estrella:</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
     
