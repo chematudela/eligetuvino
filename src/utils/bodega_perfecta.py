@@ -1,39 +1,55 @@
+
 import streamlit as st
 import altair as alt
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import LabelEncoder
 
 
 
 def bodega_perfecta():
 
     st.title("Datos para una bodega perfecta")
-       
-    # Crear el desplegable para seleccionar el tipo de vino
+     # Crear el desplegable para seleccionar el tipo de vino
     vino_tipo = st.selectbox(
         "Selecciona el tipo de vino",
         ("Vino Tinto", "Vino Blanco", "Vino Espumoso")
     )
 
-# Definir las rutas de los archivos CSV según el tipo de vino seleccionado
+    # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     if vino_tipo == "Vino Tinto":
-        archivo_csv = 'data/datasets/processed/df_merged.csv'  
+        archivo_csv = "data/datasets/processed/df_merged_tintos.csv"
+        uva_columns = [
+            'Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
+            'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
+            'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
+            "Nerod'Avola", 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
+            'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt'
+        ]
     elif vino_tipo == "Vino Blanco":
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\blancos.csv"  
+        archivo_csv = "data/datasets/processed/df_mergedf_blancos.csv"
+        uva_columns = [
+            "Albariño", "Chardonnay", "CheninBlanc", "Garganega", "GarnachaBlanca",
+            "Gewürztraminer", "Godello", "GrenacheBlanc", "GrünerVeltliner", "Macabeo",
+            "Malvasia", "Marsanne", "Nodisponible", "PinotBlanc", "PinotGrigio",
+            "PinotGris", "PinotMeunier", "PinotNoir", "RibollaGialla", "Riesling",
+            "Roussanne", "SauvignonBlanc", "Sémillon", "Verdejo", "Vermentino",
+            "Viognier", "Viura", "Weissburgunder", "Xarel-lo"
+        ]
     else:
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\espumosos.csv"  
+        archivo_csv = "data/datasets/processed/df_mergedf_espumosos.csv"
+        uva_columns = [
+            "Barbera", "Chardonnay", "CheninBlanc", "Garnacha", "Glera", "Lambrusco",
+            "Macabeo", "Malvasia", "Moscato", "MoscatoBianco", "Nodisponible",
+            "Parellada", "PinotBlanc", "PinotMeunier", "PinotNero", "PinotNoir",
+            "Riesling", "Trepat", "Xarel-lo"
+        ]
 
-    # Cargar el CSV seleccionado en el DataFrame df
+# Cargar el CSV seleccionado en el DataFrame df
     df = pd.read_csv(archivo_csv)
-
-    # Lista de columnas con las uvas
-    uva_columns = ['Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
-               'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
-               'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
-               'Nerod\'Avola', 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
-               'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt']
-
     # Asegúrate de que las columnas 'Valoración' y 'Precio' sean numéricas
     df['Valoración'] = pd.to_numeric(df['Valoración'], errors='coerce')
     df['Precio'] = pd.to_numeric(df['Precio'], errors='coerce')
@@ -55,11 +71,17 @@ def bodega_perfecta():
         # Almacenar el resultado en el diccionario
         uva_ratios[uva] = promedio_ratio
 
-    # Convertir el diccionario en un DataFrame
     uva_ratios_df = pd.DataFrame(list(uva_ratios.items()), columns=['Uva', 'Promedio_Ratio'])
+
+    # Calcular la cantidad de vinos por cada uva
+    uva_ratios_df['Cantidad'] = uva_ratios_df['Uva'].apply(lambda uva: (df[uva] == 1).sum())
 
     # Ordenar el DataFrame por el Promedio_Ratio de mayor a menor
     uva_ratios_sorted = uva_ratios_df.sort_values(by='Promedio_Ratio', ascending=False)
+
+    # Resetear el índice para que comience desde 1
+    uva_ratios_sorted = uva_ratios_sorted.reset_index(drop=True)
+    uva_ratios_sorted.index = uva_ratios_sorted.index + 1
 
     # Mostrar solo los 10 primeros registros
     top_10_uva_ratios_sorted = uva_ratios_sorted.head(10)
@@ -94,14 +116,24 @@ def bodega_perfecta():
     # Calcular el ratio de valoración/precio
     df['Ratio_Valor_Precio'] = df['Valoración'] / df['Precio']
 
-    # Agrupar por País y Región, y obtener el promedio del ratio
+    pais_region_count = df.groupby(['País', 'Región']).size().reset_index(name='Cantidad')
+   
+
+    # Calcular el ratio promedio para cada combinación de 'País' y 'Región'
     pais_region_ratio = df.groupby(['País', 'Región'], as_index=False)['Ratio_Valor_Precio'].mean()
 
-    # Ordenar los resultados por el ratio de mayor a menor
-    pais_region_ratio = pais_region_ratio.sort_values(by='Ratio_Valor_Precio', ascending=False)
+    # Unir ambos DataFrames para incluir la cantidad de registros
+    pais_region_ratio = pais_region_ratio.merge(pais_region_count, on=['País', 'Región'])
 
-    # Mostrar solo los 10 primeros registros
-    top_10_pais_region_ratio = pais_region_ratio.head(10)
+    # Ordenar por Ratio_Valor_Precio de mayor a menor
+    pais_region_ratio = pais_region_ratio.sort_values(by='Ratio_Valor_Precio', ascending=False)
+    
+
+    # Mostrar el resultado
+
+
+    top_10_pais_region_ratio=pais_region_ratio[pais_region_ratio["Cantidad"]>10].reset_index(drop = True).head(10)
+    top_10_pais_region_ratio.index = top_10_pais_region_ratio.index + 1
 
     # Crear dos columnas en Streamlit para mostrar la tabla y el gráfico
     col1, col2 = st.columns([2, 2])  # Controlamos el tamaño de las columnas
@@ -135,8 +167,18 @@ def bodega_perfecta():
     # Agrupar por País y calcular el promedio del ratio para cada país
     pais_ratio = df.groupby('País', as_index=False)['Ratio_Pais_Valor_Precio'].mean()
 
+    # Calcular la cantidad de vinos por cada país
+    pais_ratio['Cantidad'] = df.groupby('País')['Ratio_Pais_Valor_Precio'].count().values
+
+    # Filtrar solo los países con más de 100 vinos
+    pais_ratio = pais_ratio[pais_ratio['Cantidad'] > 50]
+
     # Ordenar el DataFrame por el Ratio de Valoración/Precio de mayor a menor
     pais_ratio_sorted = pais_ratio.sort_values(by='Ratio_Pais_Valor_Precio', ascending=False)
+
+    # Resetear el índice para que comience desde 1
+    pais_ratio_sorted = pais_ratio_sorted.reset_index(drop=True)
+    pais_ratio_sorted.index = pais_ratio_sorted.index + 1
 
     # Mostrar solo los 10 primeros países con la mejor relación
     top_10_pais_ratio_sorted = pais_ratio_sorted.head(10)
@@ -166,14 +208,28 @@ def bodega_perfecta():
 
     df['Ratio_Bodega_Valor_Precio'] = df['Valoración'] / df['Precio']
 
-# Agrupar por Bodega y calcular el promedio del ratio para cada bodega
+    # Agrupar por Bodega y calcular el promedio del ratio para cada bodega
+    # Calcular el ratio promedio por cada bodega
     bodega_ratio = df.groupby('Bodega', as_index=False)['Ratio_Bodega_Valor_Precio'].mean()
+
+    # Calcular la cantidad de vinos por cada bodega
+    bodega_ratio['Cantidad'] = df.groupby('Bodega')['Ratio_Bodega_Valor_Precio'].count().values
+
+    # Filtrar solo las bodegas con más de 10 vinos
+    bodega_ratio = bodega_ratio[bodega_ratio['Cantidad'] > 10]
 
     # Ordenar el DataFrame por el Ratio de Valoración/Precio de mayor a menor
     bodega_ratio_sorted = bodega_ratio.sort_values(by='Ratio_Bodega_Valor_Precio', ascending=False)
 
+    # Resetear el índice para que comience desde 1
+    bodega_ratio_sorted = bodega_ratio_sorted.reset_index(drop=True)
+    bodega_ratio_sorted.index = bodega_ratio_sorted.index + 1
+
     # Mostrar solo los 10 primeros bodegas con la mejor relación
     top_10_bodega_ratio_sorted = bodega_ratio_sorted.head(10)
+
+    # Imprimir el resultado
+    print(top_10_bodega_ratio_sorted)
 
     # Dividir la pantalla en dos columnas para mostrar la tabla y el gráfico
     col1, col2 = st.columns([2, 2])  # Controlamos el tamaño de las columnas
@@ -197,147 +253,61 @@ def bodega_perfecta():
         st.altair_chart(chart, use_container_width=True)
 
     st.divider()
+   
+    st.markdown("La Bodega perfecta: Mejores valores")
 
-    df["Uva"] = df[uva_columns].apply(lambda row: [uva for uva in uva_columns if row[uva] == 1], axis=1)
+    # Convertir las columnas de uva a columnas dummies
+    df_uvas = pd.get_dummies(df[uva_columns])
 
-# Expandir las listas en filas separadas
-    df_exploded = df.explode("Uva")
+    # Añadir las columnas dummies al DataFrame original
+    df = pd.concat([df, df_uvas], axis=1)
 
-    # Calcular los ratios
-    # Agrupar por "Uva" y calcular la media de "Valoración"
-    uva_ratios = df_exploded.groupby("Uva")["Valoración"].mean().reset_index()
-    # Agrupar por "País" y "Región" y calcular la media de "Valoración"
-    pais_region_ratios = df.groupby(["País", "Región"])["Valoración"].mean().reset_index()
-    # Agrupar por "País" y calcular la media de "Valoración" y "Precio"
-    pais_ratios = df.groupby("País")[["Valoración", "Precio"]].mean().reset_index()
-    # Agrupar por "Bodega" y calcular la media de "Valoración" y "Precio"
-    bodega_ratios = df.groupby("Bodega")[["Valoración", "Precio"]].mean().reset_index()
+    # Crear un diccionario para almacenar las correlaciones de cada uva
+    uva_price_corr = {}
 
-    # Filtrar el Top 10 de cada categoría
-    top_uvas = uva_ratios.nlargest(10, "Valoración")
-    top_paises = pais_ratios.nlargest(10, "Valoración")
-    top_bodegas = bodega_ratios.nlargest(10, "Valoración")
-    top_regiones = pais_region_ratios.nlargest(10, "Valoración")
+    # 1. Correlación de cada uva con el precio
+    for uva in uva_columns:
+        # Verifica si la columna dummies para esa uva existe en el DataFrame
+        dummy_column = uva
+        if dummy_column in df.columns:
+            # Agrupar por la columna dummy de cada uva
+            uva_price_corr[uva] = df.groupby(dummy_column)[['Precio']].mean()  # Agrupar por cada uva y calcular la media del precio
 
-    df["País"] = df["País"].str.strip()
-    df["Región"] = df["Región"].str.strip()
+    # Mostrar las correlaciones
+    for uva in uva_columns:
+        if uva in uva_price_corr:
+            print(f"Correlación de {uva} con el precio:\n", uva_price_corr[uva])
 
-    top_paises["País"] = top_paises["País"].str.strip()
-    top_regiones["País"] = top_regiones["País"].str.strip()
-    top_regiones["Región"] = top_regiones["Región"].str.strip()
-# Limpiar las columnas clave antes del merge
-    df_exploded['Uva'] = df_exploded['Uva'].str.strip().str.lower()
-    top_uvas['Uva'] = top_uvas['Uva'].str.strip().str.lower()
+    # 3. Correlación País vs Precio
+    pais_price_corr = df.groupby('País').Precio.mean()
+    st.write("Correlación País vs Precio", pais_price_corr)
 
-    df_exploded['País'] = df_exploded['País'].str.strip().str.lower()
-    top_paises['País'] = top_paises['País'].str.strip().str.lower()
+    # 4. Correlación Región vs Precio
+    region_price_corr = df.groupby('Región').Precio.mean()
+    st.write("Correlación Región vs Precio", region_price_corr)
 
-    df_exploded['Región'] = df_exploded['Región'].str.strip().str.lower()
-    top_regiones['Región'] = top_regiones['Región'].str.strip().str.lower()
+    # 5. Correlación Vino vs Precio
+    vino_price_corr = df.groupby('Bodega').Precio.mean()
+    st.write("Correlación Vino vs Precio", vino_price_corr)
 
-    df_exploded['Bodega'] = df_exploded['Bodega'].str.strip().str.lower()
-    top_bodegas['Bodega'] = top_bodegas['Bodega'].str.strip().str.lower()
+    # 6. Combinación país + región + vino
+    df['Combinacion'] = df['País'] + '_' + df['Región'] + '_' + df['Bodega']
 
-    top_combined = df_exploded.merge(top_uvas, on="Uva")
-    top_combined = top_combined.merge(top_paises, on="País")
-    top_combined = top_combined.merge(top_regiones, on=["País", "Región"], suffixes=('_left', '_right'))
-    top_combined = top_combined.merge(top_bodegas, on="Bodega")
+    # 7. Codificar la columna Combinacion
+    le = LabelEncoder()
+    df['Combinacion_cod'] = le.fit_transform(df['Combinacion'])
 
+    # 8. Entrenar un modelo para predecir la valoración a partir de las combinaciones
+    X = df[['Combinacion_cod', 'Precio']]  # Usar la codificación en lugar del texto
+    y = df['Valoración']
 
-    top_combined["Puntuacion_Combinada"] = top_combined[
-        ["Valoración_x", "Valoración_y", "Valoración_left", "Valoración_right"]
-        ].mean(axis=1)
+    # División del conjunto de datos para entrenamiento y prueba
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # Seleccionar la mejor combinación
-    mejor_combinacion = top_combined.sort_values(by="Puntuacion_Combinada", ascending=False).iloc[0]
+    # Modelo de regresión
+    model = LinearRegression()
+    model.fit(X_train, y_train)
 
-        # Mostrar en Streamlit
-    st.title("Mejor combinación de vino")
-
-    st.markdown(
-            f"""
-            ### Mejor combinación encontrada:
-            - **Bodega:** {mejor_combinacion['Bodega']}
-            - **Uva:** {mejor_combinacion['Uva']}
-            - **Región:** {mejor_combinacion['Region']}
-            - **País:** {mejor_combinacion['Pais']}
-            - **Puntuación combinada:** {mejor_combinacion['Puntuacion_Combinada']:.2f}
-            """
-        )
-
-        # Mostrar tabla con colores en Streamlit
-    st.dataframe(top_combined.sort_values(by="Puntuacion_Combinada", ascending=False).head(10)
-            .style.background_gradient(cmap="coolwarm", subset=["Puntuacion_Combinada"]))
-
-
-
-
-"""
-    # Crear columnas    tab1, tab2 = st.columns(2)
-
-    with tab1:
-        uva_columns = ['Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
-               'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
-               'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
-               'Nerod\'Avola', 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
-               'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt']
-
-        # Dictionary to store average ratings by grape type
-        valoraciones_por_uva = {}
-
-        for uva in uva_columns:
-            # Ensure 'Valoración' is numeric and filter for rows where the grape is present (value 1)
-            valoracion_media = df[df[uva] == 1]['Valoración'].mean()
-            valoraciones_por_uva[uva] = valoracion_media
-
-            # Convert the dictionary to a DataFrame
-        tipo_uva_valorada = pd.DataFrame(list(valoraciones_por_uva.items()), columns=['Tipo de uva', 'Valoración'])
-
-            # Sort the DataFrame by 'Valoración'
-        tipo_uva_valorada = tipo_uva_valorada.sort_values(by='Valoración', ascending=False)
-
-            # Display the most valued grape types
-        st.subheader("Tipos de Uva Más Valorados")
-        st.write(tipo_uva_valorada[['Tipo de uva', 'Valoración']])
-    
-    with tab2:
-            # Create a heatmap of ratings by country and grape type
-            st.subheader("Heatmap de Valoraciones por País y Tipo de Uva")
-            heatmap = alt.Chart(df.melt(id_vars=['País', 'Valoración'], value_vars=uva_columns, var_name='Tipo de uva', value_name='Presencia')).mark_rect().encode(
-                x=alt.X('País:O', title="País"),
-                y=alt.Y('Tipo de uva:O', title="Tipo de Uva"),
-                color=alt.Color('Valoración:Q', scale=alt.Scale(scheme='reds')),
-                tooltip=['País', 'Tipo de uva', 'Valoración']
-            ).properties(width=400, height=300)
-
-            st.altair_chart(heatmap, use_container_width=True)
-    
-    st.divider
-    
-    tab1, tab2 = st.columns(2)
-    with tab1: 
-        st.write("")
-    # Gráfico 2: Precio medio por tipo de uva
-    with tab2:
-        st.subheader("Precio medio por tipo de uva")
-        bar_chart = alt.Chart(df).mark_bar().encode(
-            x=alt.X('mean(Precio):Q', title="Precio Medio"),
-            y=alt.Y('Uva:N', title="Tipo de Uva", sort='-x'),
-            color=alt.Color('Uva:N', legend=None)
-        ).properties(width=400, height=300)
-        st.altair_chart(bar_chart, use_container_width=True)
-
-    st.divider()
-
-
-    # Gráfico 3: Proporción de vinos por país
-    with tab1:
-        st.subheader("Distribución de vinos por país")
-        country_count = df['País'].value_counts().reset_index()
-        country_count.columns = ['País', 'Cantidad']
-        pie_chart = alt.Chart(country_count).mark_arc().encode(
-            theta='Cantidad:Q',
-            color=alt.Color('País:N', legend=None)
-        ).properties(width=400, height=300)
-        st.altair_chart(pie_chart, use_container_width=True)"
-"""
+    # Predicciones y evaluación del modelo
+    y_pred = model.predict(X_test)
+    st.write("Predicción de la valoración estimada:", y_pred)
