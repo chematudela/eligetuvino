@@ -2,55 +2,92 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 def vino_perfecto():
     st.title("Características del vino perfecto")
     
-    # Botón para subir el archivo CSV
-    uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
+    # Crear el desplegable para seleccionar el tipo de vino
+    vino_tipo = st.selectbox(
+        "Selecciona el tipo de vino",
+        ("Vino Tinto", "Vino Blanco", "Vino Espumoso")
+    )
 
-    # Verificar si se ha subido un archivo
-    if uploaded_file is not None:
-        # Leer el archivo CSV en un DataFrame
-        df = pd.read_csv(uploaded_file)
-        
-        st.write("Gráficos de dispersión sobre características de sabor")
-
-        # Definir características sensoriales
+    # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
+    if vino_tipo == "Vino Tinto":
+        archivo_csv = "data/datasets/processed/df_merged.csv"
+        uva_columns = [
+            'Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
+            'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
+            'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
+            "Nerod'Avola", 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
+            'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt'
+        ]
         features = ['Ligero/Poderoso', 'Suave/Tánico', 'Seco/Dulce', 'Débil/Ácido']
 
-        # Ordenar el DataFrame por valoración y tomar los 50 mejores vinos
-        top_50_vinos = df.sort_values(by='Valoración', ascending=False).head(50)
+    elif vino_tipo == "Vino Blanco":
+        archivo_csv = "data/datasets/processed/df_mergedf_blancos.csv"
+        uva_columns = [
+            "Albariño", "Chardonnay", "CheninBlanc", "Garganega", "GarnachaBlanca",
+            "Gewürztraminer", "Godello", "GrenacheBlanc", "GrünerVeltliner", "Macabeo",
+            "Malvasia", "Marsanne", "Nodisponible", "PinotBlanc", "PinotGrigio",
+            "PinotGris", "PinotMeunier", "PinotNoir", "RibollaGialla", "Riesling",
+            "Roussanne", "SauvignonBlanc", "Sémillon", "Verdejo", "Vermentino",
+            "Viognier", "Viura", "Weissburgunder", "Xarel-lo"
+        ]
+        features =[ 'Ligero/Poderoso','Seco/Dulce','Débil/Ácido' ]
+    else:
+        archivo_csv = "data/datasets/processed/df_mergedf_espumosos.csv"
+        uva_columns = [
+            "Barbera", "Chardonnay", "CheninBlanc", "Garnacha", "Glera", "Lambrusco",
+            "Macabeo", "Malvasia", "Moscato", "MoscatoBianco", "Nodisponible",
+            "Parellada", "PinotBlanc", "PinotMeunier", "PinotNero", "PinotNoir",
+            "Riesling", "Trepat", "Xarel-lo"
+        ]
+        features = [ 'Ligero/Poderoso','Débil/Ácido','Amable/Con Burbujas' ] 
 
-        # Calcular los valores promedio de las características en los 50 mejores vinos
-        mean_values = top_50_vinos[features].mean()
+    # Leer el archivo CSV en un DataFrame
+    df = pd.read_csv(archivo_csv)
+    for feature in features:
+        df[feature] = pd.to_numeric(df[feature], errors='coerce')
+    # Mostrar los gráficos de dispersión sobre características de sabor
+    st.write("Gráficos de dispersión sobre características de sabor")
+    
+    # Ordenar el DataFrame por valoración y tomar los 50 mejores vinos
+    top_50_vinos = df.sort_values(by='Valoración', ascending=False).head(50)
 
-        # Graficar la relación entre cada característica y la valoración
-        fig, axes = plt.subplots(2, 2, figsize=(15, 12))
-        axes = axes.flatten()
+    # Calcular los valores promedio de las características en los 50 mejores vinos
+    mean_values = top_50_vinos[features].mean()
 
-        for i, feature in enumerate(features):
-            sns.scatterplot(data=df, x=feature, y='Valoración', alpha=0.5, ax=axes[i], label="Todos los vinos")
-            sns.scatterplot(data=top_50_vinos, x=feature, y='Valoración', color='red', ax=axes[i], label="Top 50 vinos")
-            axes[i].set_title(f'Valoración vs {feature}')
-            axes[i].set_xlabel(feature)
-            axes[i].set_ylabel('Valoración')
+    # Graficar la relación entre cada característica y la valoración
+    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    axes = axes.flatten()
 
-        plt.tight_layout()
-        st.pyplot(fig)
+    # Dibujar los gráficos para cada característica
+    for i, feature in enumerate(features):
+        sns.scatterplot(data=df, x=feature, y='Valoración', alpha=0.5, ax=axes[i], label="Todos los vinos")
+        sns.scatterplot(data=top_50_vinos, x=feature, y='Valoración', color='red', ax=axes[i], label="Top 50 vinos")
+        axes[i].set_title(f'Valoración vs {feature}')
+        axes[i].set_xlabel(feature)
+        axes[i].set_ylabel('Valoración')
 
-        # Mostrar los valores en la aplicación
-        st.write("**Valores promedio en los 50 vinos mejor valorados:**")
-        for feature, value in mean_values.items():
-            st.write(f"- {feature}: {value:.2f}")
-        
+    # Ajustar el diseño del gráfico
+    plt.tight_layout()
+
+    # Mostrar el gráfico en la aplicación Streamlit
+    st.pyplot(fig)
+
+    # Mostrar los valores promedio de las características en los 50 vinos mejor valorados
+    st.write("**Valores promedio en los 50 vinos mejor valorados:**")
+    for feature, value in mean_values.items():
+        st.write(f"- {feature}: {value:.2f}")
     
     st.title("🍷 Características promedio de los 100 vinos mejor valorados")
 
     # Tomar los 100 mejores vinos según la valoración
     top_100_vinos = df.sort_values(by='Valoración', ascending=False).head(100)
     # Características a analizar
-    features = ['Ligero/Poderoso', 'Suave/Tánico', 'Seco/Dulce', 'Débil/Ácido']
+   
 
     # Calcular la media de cada característica
     media_caracteristicas = top_100_vinos[features].mean()
@@ -94,15 +131,8 @@ def vino_perfecto():
     st.pyplot(fig)
 
     st.title("🍇 Correlación entre Tipos de Uva y Valoración")
-
-    # Lista de columnas de tipos de uva
-    uva_columns = ['Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
-                       'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
-                       'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
-                       "Nerod'Avola", 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
-                       'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt']
-
-        # Asegurar que las columnas son numéricas
+    df = df.replace('No disponible', np.nan)
+    # Asegurar que las columnas son numéricas
     df[uva_columns] = df[uva_columns].apply(pd.to_numeric, errors='coerce', downcast='integer')
 
         # Calcular la correlación con la valoración
