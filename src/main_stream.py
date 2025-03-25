@@ -12,7 +12,8 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
-from utils import pagina_principal,eda_1,bodega_perfecta,vino_perfecto,recomendador_vinos,estimacion_valoracion,country_mapping
+from utils import pagina_principal,eda_1,bodega_perfecta,vino_perfecto,estimacion_valoracion,country_mapping
+from utils.Funcion_recomendación_vino import recomendador_vinos
 
 
 
