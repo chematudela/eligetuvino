@@ -39,7 +39,6 @@ def eda_1():
         st.subheader("Distribución de vinos por país")
         country_count = df['País'].value_counts().reset_index()
         country_count.columns = ['País', 'Cantidad']
-        country_count = country_count[country_count['Cantidad'] >= 100]
         total_vinos = country_count['Cantidad'].sum()
         country_count['Porcentaje'] = (country_count['Cantidad'] / total_vinos) * 100
         
@@ -176,7 +175,8 @@ def eda_1():
 
     # Top 10 países con mejor valoración promedio
     with col2:
-        df_top_10_valoracion = df_grouped_2.sort_values(by="avg_valoracion", ascending=False).head(10)
+        df_min20bodega = df_grouped_2[df_grouped_2['num_bodegas'] > 20]
+        df_top_10_valoracion = df_min20bodega.sort_values(by="avg_valoracion", ascending=False).head(10)
         st.write("⭐ Top 10 países con la mejor valoración promedio de vinos")
         st.table(df_top_10_valoracion.set_index("País"))
     
@@ -186,6 +186,16 @@ def eda_1():
     # Wine price by country
     df['Precio'] = pd.to_numeric(df['Precio'], errors='coerce')
     df_grouped_3 = df.groupby("País")["Precio"].mean().reset_index(name="avg_precio")
+
+    # Contar el número de vinos por país
+    df_vino_count = df.groupby("País")["ID"].count().reset_index(name="vino_count")
+    
+    # Filtrar los países con más de un vino
+    df_vino_count_filtered = df_vino_count[df_vino_count["vino_count"] > 1]
+    
+    # Filtrar df_grouped_3 para incluir solo los países que tienen más de un vino 
+    df_grouped_3 = df_grouped_3[df_grouped_3["País"].isin(df_vino_count_filtered["País"])]
+
 
     # Create the choropleth map for average price
     fig3 = px.choropleth(df_grouped_3, 
