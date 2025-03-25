@@ -10,31 +10,43 @@ import seaborn as sns
 def bodega_perfecta():
 
     st.title("Datos para una bodega perfecta")
-       
-    # Crear el desplegable para seleccionar el tipo de vino
+     # Crear el desplegable para seleccionar el tipo de vino
     vino_tipo = st.selectbox(
         "Selecciona el tipo de vino",
         ("Vino Tinto", "Vino Blanco", "Vino Espumoso")
     )
 
-# Definir las rutas de los archivos CSV según el tipo de vino seleccionado
+    # Definir las rutas de los archivos CSV según el tipo de vino seleccionado
     if vino_tipo == "Vino Tinto":
-        archivo_csv = 'data/datasets/processed/df_merged.csv'  
+        archivo_csv = "data/datasets/processed/df_merged.csv"
+        uva_columns = [
+            'Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
+            'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
+            'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
+            "Nerod'Avola", 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
+            'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt'
+        ]
     elif vino_tipo == "Vino Blanco":
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\blancos.csv"  
+        archivo_csv = "data/datasets/processed/df_mergedf_blancos.csv"
+        uva_columns = [
+            "Albariño", "Chardonnay", "CheninBlanc", "Garganega", "GarnachaBlanca",
+            "Gewürztraminer", "Godello", "GrenacheBlanc", "GrünerVeltliner", "Macabeo",
+            "Malvasia", "Marsanne", "Nodisponible", "PinotBlanc", "PinotGrigio",
+            "PinotGris", "PinotMeunier", "PinotNoir", "RibollaGialla", "Riesling",
+            "Roussanne", "SauvignonBlanc", "Sémillon", "Verdejo", "Vermentino",
+            "Viognier", "Viura", "Weissburgunder", "Xarel-lo"
+        ]
     else:
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\espumosos.csv"  
+        archivo_csv = "data/datasets/processed/df_mergedf_espumosos.csv"
+        uva_columns = [
+            "Barbera", "Chardonnay", "CheninBlanc", "Garnacha", "Glera", "Lambrusco",
+            "Macabeo", "Malvasia", "Moscato", "MoscatoBianco", "Nodisponible",
+            "Parellada", "PinotBlanc", "PinotMeunier", "PinotNero", "PinotNoir",
+            "Riesling", "Trepat", "Xarel-lo"
+        ]
 
-    # Cargar el CSV seleccionado en el DataFrame df
+# Cargar el CSV seleccionado en el DataFrame df
     df = pd.read_csv(archivo_csv)
-
-    # Lista de columnas con las uvas
-    uva_columns = ['Aglianico', 'Barbera', 'Blaufränkisch', 'CabernetFranc', 'CabernetSauvignon', 'Carignan',
-               'Cariñena', 'Corvina', 'Corvinone', 'Gamay', 'Garnacha', 'Graciano', 'Grenache', 'Malbec',
-               'Mencia', 'Merlot', 'Monastrell', 'Montepulciano', 'Mourvedre', 'Nebbiolo', 'NerelloMascalese',
-               'Nerod\'Avola', 'PetitVerdot', 'PinotNero', 'PinotNoir', 'Primitivo', 'Rondinella', 'Sangiovese',
-               'Shiraz/Syrah', 'Tempranillo', 'TourigaNacional', 'Zweigelt']
-
     # Asegúrate de que las columnas 'Valoración' y 'Precio' sean numéricas
     df['Valoración'] = pd.to_numeric(df['Valoración'], errors='coerce')
     df['Precio'] = pd.to_numeric(df['Precio'], errors='coerce')
