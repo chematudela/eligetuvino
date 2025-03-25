@@ -4,7 +4,7 @@ import altair as alt
 import json
 import plotly.express as px
 import plotly.colors as pc
-from utils import country_mapping
+from utils.country_mapping import country_mapping
 #with open('data/datasets/processed/country_mapping.json', 'r', encoding="utf-8") as f:
     #country_mapping = json.load(f)
 
@@ -22,9 +22,9 @@ def eda_1():
     if vino_tipo == "Vino Tinto":
         archivo_csv = '../data/datasets/processed/df_merged.csv'
     elif vino_tipo == "Vino Blanco":
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\blancos.csv"  
+        archivo_csv = '../data/datasets/processed/df_mergedf_blancos.csv'
     else:
-        archivo_csv = r"C:\Users\yiyip\OneDrive\Documents\GitHub\Proyecto_grupo2_vinos\csv\espumosos.csv"  
+        archivo_csv = '../data/datasets/processed/df_mergedf_espumosos.csv'  
 # Cargar el CSV seleccionado en el DataFrame df
     df = pd.read_csv(archivo_csv)    
     df["País"] = df["País"].replace(country_mapping)
@@ -39,6 +39,7 @@ def eda_1():
         st.subheader("Distribución de vinos por país")
         country_count = df['País'].value_counts().reset_index()
         country_count.columns = ['País', 'Cantidad']
+        country_count = country_count[country_count['Cantidad'] >= 100]
         total_vinos = country_count['Cantidad'].sum()
         country_count['Porcentaje'] = (country_count['Cantidad'] / total_vinos) * 100
         
