@@ -249,10 +249,45 @@ def bodega_perfecta():
             title='Top 10 Bodegas con Mejor Ratio Valoración/Precio'
         )
 
-        # Mostrar el gráfico en Streamlit
+     # Mostrar el gráfico en Streamlit
         st.altair_chart(chart, use_container_width=True)
 
-    st.divider()
+    
+    if vino_tipo == "Vino Tinto":
+        st.markdown(
+        """
+        ### 🏆 Nuestra recomendación:
+        En base a los datos obtenidos, sería abrir una bodega en **Valdepeñas (La Mancha)**  
+        que siga el modelo de **Félix Solís**, que tenga viñedos de uva  
+        **Monastrell, Tempranillo y Garnacha**.
+        """
+    )
+
+    if vino_tipo == "Vino Blanco":
+        st.markdown(
+        """
+        ### 🏆 Nuestra recomendación:
+        En base a los datos obtenidos, sería abrir una bodega en **Jumilla (La Mancha)**  
+        que siga el modelo de **Cuatro Rayas**, que tenga viñedos de uva  
+        **Verdejo, Macabeo y Viura**.
+        """
+    )
+
+    if vino_tipo == "Vino Espumoso":
+        st.markdown(
+        """
+        ### 🏆 Nuestra recomendación:
+        En base a los datos obtenidos, sería abrir una bodega en **Castilla y León**  
+        que siga el modelo de **Freixenet**, que tenga viñedos de uva  
+        **Garnacha**.
+        """
+    )
+
+
+
+
+
+    '''st.divider()
    
     st.markdown("La Bodega perfecta: Mejores valores")
 
@@ -310,4 +345,4 @@ def bodega_perfecta():
 
     # Predicciones y evaluación del modelo
     y_pred = model.predict(X_test)
-    st.write("Predicción de la valoración estimada:", y_pred)
+    st.write("Predicción de la valoración estimada:", y_pred)'''

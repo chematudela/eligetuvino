@@ -1,9 +1,15 @@
 import streamlit as st
-import pandas as pd
-import joblib
 import requests
 from bs4 import BeautifulSoup
 from sklearn.preprocessing import MinMaxScaler
+from dotenv import load_dotenv
+import pandas as pd
+import google.generativeai as genai
+import joblib
+
+
+
+
 
 
 def dic_pais(nombre_pais):

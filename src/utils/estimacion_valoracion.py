@@ -29,7 +29,23 @@ def estimacion_valoracion():
 
                 valoracion = valoravinos(ruta_delantera, ruta_trasera, precio_float)
 
-                st.success(f"La valoración estimada del vino es: {valoracion[0]:.2f}")
+                #st.success(f"La valoración estimada del vino es: {valoracion[0]:.2f}")
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#4B0F24;
+                        padding: 15px;
+                        border-radius: 10px;
+                        text-align: center;
+                        color: white;
+                        font-size: 24px;
+                    ">
+                        🍷 <b>La valoración estimada para este vino es:</b> <br>
+                        <span style="font-size: 32px;">⭐ {valoracion[0]:.1f}/5 ⭐</span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
                 os.remove(ruta_delantera)
                 os.remove(ruta_trasera)
