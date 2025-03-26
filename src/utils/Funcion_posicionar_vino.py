@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from tqdm import tqdm
+import streamlit as st
 import pandas as pd
 import pytesseract
 from PIL import Image
@@ -115,7 +116,7 @@ def valora_tu_vino(delantera,trasera,precio):
 
     prediccion_nota = modelo.predict(prediccion)
 
-    
+   
     st.markdown(
     f"""
     <div style="
@@ -131,7 +132,7 @@ def valora_tu_vino(delantera,trasera,precio):
     </div>
     """,
     unsafe_allow_html=True
-)
+    )
 
 
 
