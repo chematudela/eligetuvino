@@ -3,6 +3,8 @@ import os
 from PIL import Image
 import tempfile
 from utils.valora_vinos import valoravinos  # Importa solo la función
+import pandas as pd
+
 
 
 def estimacion_valoracion():
@@ -54,3 +56,13 @@ def estimacion_valoracion():
                 st.error("Por favor, ingresa un valor numérico válido para el precio.")
         else:
             st.warning("Por favor, sube ambas imágenes y proporciona el precio.")
+
+
+               # Métricas del modelo
+    metricas = pd.DataFrame({
+        "Métrica": ["R²", "MAPE"],
+        "Train": [0.73, 2.90],
+        "Test": [0.61, 3.51],
+    })
+    st.markdown("### Métricas finales del modelo")
+    st.table(metricas.set_index("Métrica"))
