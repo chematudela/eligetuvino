@@ -1,10 +1,17 @@
 # Elige tu vino
 
+⚠️ **Aviso Legal**: Este proyecto se distribuye exclusivamente con **fines educativos**.  
+No está permitido su uso con **fines comerciales ni lucrativos** sin autorización expresa del autor.
+
+
 ## Descripción
 
 Este proyecto se realiza en el marco del bootcamp de Machine Learning de la 4GeeksAcademy, llevado a cabo de noviembre de 2024 a marzo de 2025.
 
-Elige tu vino es un proyecto que, mediante técnicas de análisis de datos y machine learning, tiene como objetivo definir el "vino perfecto" para un usuario, tanto B2C como B2B. 
+Elige tu vino es un proyecto que, mediante técnicas de análisis de datos y machine learning, tiene como objetivo el uso de estos algoritmos con aplicaciones reales y útiles tales como: 
+- Estimación de la nota de un vino en la plataforma VIVINO por medio de fotografías de sus etiquetas.
+- Porpuesta del vino con mayor puntuación posible en VIVINO para un precio máximo dado en relación a uno vino dado (vinos catalogados como similiares según el algoritmo que hemos realizado)
+
 Se basa en informaciones sobre unos 32.000 vinos, extraídas por web scraping de la página vivino.es. 
 Utilizando modelos como KMean, clustering, NLP e integración de IA Gemini (LMM), hemos implementado herramientas que complementan lo que ya ofrece esa plataforma, ayudando aún más a los usuarios en su búsqueda del vino ideal.
 
@@ -38,17 +45,42 @@ Utilizando modelos como KMean, clustering, NLP e integración de IA Gemini (LMM)
 **Re :** Expresión regular
 
 
-
 ## Archivos y su Propósito
 
-- **README.md :** Este archivo, donde se explica la estructura del proyecto y cómo trabajar con él.
-- **scrap_wine_list.py :** Conseguir URLs de todos los vinos, en formato API.
-- **Conversor2.0.py :** Scraping de la lista de URLs en formato API para obtener URLs finales, por batch de 100.
-- **Corrector csv.ipynb :** Scripts para conseguir información detallada  dentro de las páginas de vino. 
-- **merge.ipynb :** Codigos utiles para recopilación de la info de cientos de archivos de scrap: adaptar formato, limpiar duplicados, revisar info, y merge final.
-- **archivos en data :** Datasets originales (con el merged ya hecho), datasets trabajados y fotos necesarios para los scripts
-- **Archivo Notebooks_script_aux :** Script necesarios para tareas a lo largo del proceso: limpieza de datos, script para API Gemini, scrapping, EDA, KMeans
-- **src :** (Script finales) = main_stream.py para el desarollo de streamlit y las funciones y modelos necesarios para que funcione. 
+## 📂 Estructura del Proyecto
+
+Explicación de los archivos y su propósito.
+
+### 📘 Documentación  
+- **`README.md`** → Explicación del proyecto, su estructura y cómo trabajar con él.  
+
+### 🗂 Datos  
+- **`data/`** → Contiene:  
+  - Datasets originales (incluyendo el merged final).  
+  - Datasets trabajados.  
+  - Imágenes necesarias para los scripts. 
+
+### 🔄 obtencion_datos_scraping  
+- **`scrap_wine_list.py`** → Obtiene URLs de todos los vinos en formato API.  
+- **`Conversor2.0.py`** → Realiza una conversión de url al formato "estático". 
+- **`web_scraping.ipynb`** → notebook para extraer información detallada de las páginas de vino.  
+ 
+### 📊 analisis_y_modelado/  
+- **`eda_blancos.ipynb/`** → Tratamiento del dataset inicial de vinos blancos.  
+- **`eda_espumosos.ipynb/`** → Tratamiento del dataset inicial de vinos espumosos. 
+- **`eda_modelos_tintos.ipynb/`** → Tratamiento del dataset inicial de vinos tintos y modelados para las aplicaciones.  
+
+ 
+### 📊 notebook_scripts_aux 
+- ** Scripts y cuadernos de desarrollo auxiliar.
+
+ 
+### 🌐 Aplicación Web  
+- **`src/`** → Contiene los scripts finales y los modelos usados: 
+  - **`modelos/`** →  Contiene los modelos entrenados para la aplicación. 
+  - **`utils.py`** →  Contiene los scripts fundamentales del proyecto. El archivo main invoca las funciones de contenidas en él.
+  - **`main_stream.py`** → Desarrollo de la app en Streamlit.  
+  
 
 ## Instalación
 
