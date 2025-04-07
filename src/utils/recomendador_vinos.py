@@ -18,7 +18,7 @@ def cargar_datos():
     
     df_total["ID"] = df_total["ID"].astype(int)
     df_total["Precio"] = df_total["Precio"].astype(float)
-    df_total_cluster = df_total.drop(columns=["Unnamed: 0", "ID", "Precio"], errors='ignore')
+    df_total_cluster = df_total.drop(columns=["Unnamed: 0", "ID", "Precio","Valoración"], errors='ignore')
     
     return df_total, df_total_cluster, df_final_tintos_corregido
 
@@ -42,7 +42,7 @@ def recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_tintos_
     scaler = MinMaxScaler()
     df_total_scaled = pd.DataFrame(scaler.fit_transform(df_total_cluster), columns=df_total_cluster.columns)
 
-    model_KM = joblib.load("src/modelos/kmeans_model.pkl")
+    model_KM = joblib.load("src/modelos/kmeans_model_2.pkl")
     df_total["cluster"] = model_KM.predict(df_total_scaled)
 
     df_final_tintos_corregido = df_final_tintos_corregido[pd.to_numeric(df_final_tintos_corregido["ID"], errors='coerce').notna()]
@@ -72,7 +72,7 @@ def recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_tintos_
     indice_max_valoracion = df_total_limite_precio["Valoración"].idxmax()
     url_max_val = df_final_tintos_corregido.loc[df_final_tintos_corregido["ID"] == df_total.loc[indice_max_valoracion, "ID"], "Url"]
 
-    return url_precio_min.values[0] if not url_precio_min.empty else None, url_max_val.values[0] if not url_max_val.empty else None
+    return  url_max_val.values[0] if not url_max_val.empty else None , #url_precio_min.values[0] if not url_precio_min.empty else None
 
 def mostrar_tabla_vinos(urls, df_final_tintos_corregido):
     data = []
@@ -126,5 +126,5 @@ def recomendador_vinos():
         if df_final_pais.empty:
             st.write(f"No hay vinos disponibles para el país seleccionado ({pais_seleccionado}).")
         else:
-            url_precio_min, url_max_val = recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_pais)
-            mostrar_tabla_vinos([url_precio_min, url_max_val], df_final_pais)
+            url_max_val = recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_pais)
+            mostrar_tabla_vinos(url_max_val, df_final_pais)

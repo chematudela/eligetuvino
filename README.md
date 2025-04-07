@@ -8,7 +8,7 @@ No está permitido su uso con **fines comerciales ni lucrativos** sin autorizaci
 
 Este proyecto se realiza en el marco del bootcamp de Machine Learning de la 4GeeksAcademy, llevado a cabo de noviembre de 2024 a marzo de 2025.
 
-Elige tu vino es un proyecto que, mediante técnicas de análisis de datos y machine learning, tiene como objetivo el uso de estos algoritmos con aplicaciones reales y útiles tales como: 
+Elige tu vino es un proyecto que, mediante técnicas de análisis de datos y machine learning, tiene como objetivo ofrecer aplicaciones reales y útiles tales como: 
 - Estimación de la nota de un vino en la plataforma VIVINO por medio de fotografías de sus etiquetas.
 - Porpuesta del vino con mayor puntuación posible en VIVINO para un precio máximo dado en relación a uno vino dado (vinos catalogados como similiares según el algoritmo que hemos realizado)
 
@@ -44,8 +44,6 @@ Utilizando modelos como KMean, clustering, NLP e integración de IA Gemini (LMM)
 **google.generativeai :** Librería para uso de la api de Gemini (LLM).
 **Re :** Expresión regular
 
-
-## Archivos y su Propósito
 
 ## 📂 Estructura del Proyecto
 

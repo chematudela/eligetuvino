@@ -75,34 +75,66 @@ def recomendacion_vino(url, precio, pais):
 
    
     if pais == "Cualquier sitio":
-        indice_min_precio = df_total[(df_total["cluster"] == cluster)]["Precio"].idxmin()
+        '''indice_min_precio = df_total[(df_total["cluster"] == cluster)]["Precio"].idxmin()
         fila_min_precio = df_total.loc[indice_min_precio]
         url_precion_min = df_final_tintos_corregido[df_final_tintos_corregido["ID"] == fila_min_precio["ID"].astype(int).astype(str)]["Url"]
 
         df_total_limite_precio = df_total[df_total["Precio"] < precio]
         indice_max_valoración = df_total_limite_precio[(df_total_limite_precio["cluster"] == cluster)]["Valoración"].idxmax()
         fila_max_valoracion = df_total.iloc[indice_max_valoración]
-        url_max_val = df_final_tintos_corregido[df_final_tintos_corregido["ID"] == fila_max_valoracion["ID"].astype(int).astype(str)]["Url"]
+        url_max_val = df_final_tintos_corregido[df_final_tintos_corregido["ID"] == fila_max_valoracion["ID"].astype(int).astype(str)]["Url"]'''
+        df_total_limite_precio = df_total[df_total["Precio"] < precio]
+
+        # Filtrar por cluster
+        df_filtrado = df_total_limite_precio[df_total_limite_precio["cluster"] == cluster]
+
+        # Obtener los 3 mejores índices por 'Valoración'
+        #top_3_indices = df_filtrado.nlargest(3, "Valoración").index
+
+        # Primero, ordenamos por 'Valoración' (descendente) y luego por 'Precio' (ascendente)
+        df_filtrado_sorted = df_filtrado.sort_values(by=['Valoración', 'Precio'], ascending=[False, True])
+
+        # Luego, obtenemos los índices de las 3 primeras filas
+        top_3_indices = df_filtrado_sorted.head(3).index
+
+        # Obtener las filas correspondientes a esos índices
+        top_3_filas = df_total.loc[top_3_indices]
+
+        # Obtener las URLs correspondientes a esos 3 mejores
+        urls_top_3 = df_final_tintos_corregido[
+            df_final_tintos_corregido["ID"].isin(top_3_filas["ID"].astype(int).astype(str))
+        ]["Url"]
 
 
     else:
+        
    
-        indice_min_precio = df_total[(df_total["cluster"] == cluster)&(df_total["País_encoded"] == dic_pais(pais))]["Precio"].idxmin()
-        fila_min_precio = df_total.loc[indice_min_precio]
-        url_precion_min = df_final_tintos_corregido[df_final_tintos_corregido["ID"] == fila_min_precio["ID"].astype(int).astype(str)]["Url"]
-        
-
-        # Cálculo de la url de máxima valoración para un precio dado
         df_total_limite_precio = df_total[df_total["Precio"] < precio]
-        indice_max_valoración = df_total_limite_precio[(df_total_limite_precio["cluster"] == cluster) & (df_total["País_encoded"]==dic_pais(pais))]["Valoración"].idxmax()
-        fila_max_valoracion = df_total.iloc[indice_max_valoración]
-        url_max_val = df_final_tintos_corregido[df_final_tintos_corregido["ID"] == fila_max_valoracion["ID"].astype(int).astype(str)]["Url"]
 
-        
-    return url_precion_min.values[0], url_max_val.values[0]
+        # Filtrar por cluster y país
+        df_filtrado = df_total_limite_precio[
+            (df_total_limite_precio["cluster"] == cluster) & 
+            (df_total_limite_precio["País_encoded"] == dic_pais(pais))
+        ]
+        df_filtrado_sorted = df_filtrado.sort_values(by=['Valoración', 'Precio'], ascending=[False, True])
+        top_3_indices = df_filtrado_sorted.head(3).index
 
-def mostrar_tabla_vinos(Url1, Url2, df_mostrar_vinos):
-    urls = [Url1, Url2]
+        # Obtener los índices de los 3 mejores (por valoración)
+        #top_3_indices = df_filtrado.nlargest(3, "Valoración").index
+
+        # Obtener las filas correspondientes
+        top_3_filas = df_total.loc[top_3_indices]
+
+        # Obtener las URLs correspondientes
+        urls_top_3 = df_final_tintos_corregido[
+            df_final_tintos_corregido["ID"].isin(top_3_filas["ID"].astype(int).astype(str))
+        ]["Url"]
+
+                
+    return urls_top_3.tolist()
+    
+def mostrar_tabla_vinos(url, df_mostrar_vinos):
+    urls = url
     data = []
     
     for url in urls:
@@ -158,5 +190,5 @@ def recomendador_vinos():
         if df_final_pais.empty:
             st.write(f"No hay vinos disponibles para el país seleccionado ({pais_seleccionado}).")
         else:
-            url_precio_min, url_max_val = recomendacion_vino(url, precio, pais_seleccionado)
-            mostrar_tabla_vinos(url_precio_min, url_max_val, df_final_tintos_corregido)
+            url_max_val_1 = recomendacion_vino(url, precio, pais_seleccionado)
+            mostrar_tabla_vinos(url_max_val_1, df_final_tintos_corregido)
