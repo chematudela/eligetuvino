@@ -17,3 +17,4 @@ pytesseract
 google-generativeai
 BeautifulSoup
 bs4
+beautifulsoup4
