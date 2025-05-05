@@ -30,7 +30,7 @@ alt.themes.enable("dark")
 
 st.sidebar.title("Navegación")
 
-pagina= st.sidebar.selectbox("Selecciona una página", ["Página principal", "EDA 1", "Bodega Perfecta","Vino perfecto","Valorify", "Recomendador de vinos"])
+pagina = st.sidebar.selectbox("Selecciona una página", ["Página principal", "EDA 1", "Bodega Perfecta" ,"Vino perfecto" ,"Valorify", "Recomendador de vinos"])
 
 if pagina == "Página principal":
     pagina_principal()

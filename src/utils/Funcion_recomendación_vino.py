@@ -8,10 +8,6 @@ import google.generativeai as genai
 import joblib
 
 
-
-
-
-
 def dic_pais(nombre_pais):
     X_train_dict_pais = pd.read_csv("data/datasets/processed/X_train_dict_pais.csv")
     dic = dict(zip(X_train_dict_pais["País"], X_train_dict_pais["País_encoded"]))

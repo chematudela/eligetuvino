@@ -70,7 +70,7 @@ Explicación de los archivos y su propósito.
 
  
 ### 📊 notebook_scripts_aux 
-- ** Scripts y cuadernos de desarrollo auxiliar.
+- Scripts y cuadernos de desarrollo auxiliar.
 
  
 ### 🌐 Aplicación Web  

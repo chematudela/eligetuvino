@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from sklearn.preprocessing import MinMaxScaler
 
+# Cargar los datos
 def cargar_datos():
     X_train = pd.read_csv("data/datasets/processed/X_train_imputed.csv")
     y_train = pd.read_csv("data/datasets/processed/y_train.csv")
@@ -18,10 +19,11 @@ def cargar_datos():
     
     df_total["ID"] = df_total["ID"].astype(int)
     df_total["Precio"] = df_total["Precio"].astype(float)
-    df_total_cluster = df_total.drop(columns=["Unnamed: 0", "ID", "Precio","Valoración"], errors='ignore')
+    df_total_cluster = df_total.drop(columns=["Unnamed: 0", "ID", "Precio", "Valoración"], errors='ignore')
     
     return df_total, df_total_cluster, df_final_tintos_corregido
 
+# Obtener la imagen del vino
 def obtener_imagen_vino(url):
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -38,6 +40,7 @@ def obtener_imagen_vino(url):
         print(f"Error obteniendo la imagen: {e}")
     return None
 
+# Función de recomendación de vino
 def recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_tintos_corregido):
     scaler = MinMaxScaler()
     df_total_scaled = pd.DataFrame(scaler.fit_transform(df_total_cluster), columns=df_total_cluster.columns)
@@ -62,6 +65,7 @@ def recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_tintos_
     if vinos_cluster.empty:
         return None, None
     
+    # Obtener vino con el precio mínimo en el mismo cluster
     indice_min_precio = vinos_cluster["Precio"].idxmin()
     url_precio_min = df_final_tintos_corregido.loc[df_final_tintos_corregido["ID"] == df_total.loc[indice_min_precio, "ID"], "Url"]
 
@@ -69,11 +73,13 @@ def recomendacion_vino(url, precio, df_total, df_total_cluster, df_final_tintos_
     if df_total_limite_precio.empty:
         return url_precio_min.values[0] if not url_precio_min.empty else None, None
 
+    # Obtener vino con la valoración máxima dentro del límite de precio
     indice_max_valoracion = df_total_limite_precio["Valoración"].idxmax()
     url_max_val = df_final_tintos_corregido.loc[df_final_tintos_corregido["ID"] == df_total.loc[indice_max_valoracion, "ID"], "Url"]
 
-    return  url_max_val.values[0] if not url_max_val.empty else None , #url_precio_min.values[0] if not url_precio_min.empty else None
+    return url_max_val.values[0] if not url_max_val.empty else None
 
+# Mostrar tabla de vinos
 def mostrar_tabla_vinos(urls, df_final_tintos_corregido):
     data = []
     for url in urls:
@@ -82,24 +88,26 @@ def mostrar_tabla_vinos(urls, df_final_tintos_corregido):
         vino_info = df_final_tintos_corregido[df_final_tintos_corregido["Url"].str.strip() == url.strip()]
         if not vino_info.empty:
             img_url = obtener_imagen_vino(url)
+            imagen_html = f'<img src="{img_url}" style="height: 100px; width: 100px;">' if img_url else "No disponible"
             data.append({
-                "Imagen": f"![Vino]({img_url})" if img_url else "No disponible",
+                "Imagen": imagen_html,
                 "Bodega": vino_info["Bodega"].values[0],
                 "Región": vino_info["Región"].values[0],
                 "País": vino_info["País"].values[0],
-                "Precio":vino_info["Precio"].values[0],
+                "Precio": vino_info["Precio"].values[0],
                 "URL": url
             })
 
     if data:
         df_display = pd.DataFrame(data)
-        st.markdown(df_display.to_markdown(index=False), unsafe_allow_html=True)
+        st.markdown(df_display.to_markdown(index=False, escape=False), unsafe_allow_html=True)
     else:
         st.write("No se encontraron vinos recomendados.")
 
+# Función principal
 def recomendador_vinos():
     st.title('Buscar Vino 🍷')
-    st.write(""" 
+    st.write("""  
         ¡Bienvenido a la aplicación de búsqueda de vinos! 🍇  
         Selecciona un país (o "Cualquier sitio") y luego introduce la URL de un vino y su precio para obtener recomendaciones.  
     """)
@@ -107,22 +115,22 @@ def recomendador_vinos():
     # Cargar datos
     df_total, df_total_cluster, df_final_tintos_corregido = cargar_datos()
 
-    # Seleccionar el país o "Cualquier sitio"
-    paises_disponibles = ["Cualquier sitio"] + list(df_final_tintos_corregido["País"].unique())  # Incluye la opción "Cualquier sitio"
+    # Seleccionar el país
+    paises_disponibles = ["Cualquier sitio"] + list(df_final_tintos_corregido["País"].unique())
     pais_seleccionado = st.selectbox("Selecciona el país de los vinos:", paises_disponibles)
 
     # Filtrar vinos según el país seleccionado
     if pais_seleccionado == "Cualquier sitio":
-        df_final_pais = df_final_tintos_corregido  # No aplicar filtro de país
+        df_final_pais = df_final_tintos_corregido
     else:
         df_final_pais = df_final_tintos_corregido[df_final_tintos_corregido["País"] == pais_seleccionado]
-    
+
     # Pedir la URL y el precio
     url = st.text_input("Introduce la URL del vino:")
     precio = st.number_input("Introduce el precio límite:", min_value=0.0, value=40.0, step=1.0)
 
+    # Botón de recomendación
     if st.button("Recomendar Vino"):
-        # Si no hay vinos disponibles en el país seleccionado, mostrar mensaje
         if df_final_pais.empty:
             st.write(f"No hay vinos disponibles para el país seleccionado ({pais_seleccionado}).")
         else:
