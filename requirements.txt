@@ -16,3 +16,5 @@ python-dotenv
 pytesseract
 google-generativeai
 bs4
+tabulate
+
