@@ -12,3 +12,4 @@ streamlit
 altair
 plotly
 wordcloud
+python-dotenv
