@@ -13,3 +13,4 @@ altair
 plotly
 wordcloud
 python-dotenv
+pytesseract
