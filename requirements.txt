@@ -16,3 +16,4 @@ python-dotenv
 pytesseract
 google-generativeai
 BeautifulSoup
+bs4
