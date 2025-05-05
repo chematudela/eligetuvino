@@ -14,3 +14,4 @@ plotly
 wordcloud
 python-dotenv
 pytesseract
+google-generativeai
